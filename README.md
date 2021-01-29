@@ -7,7 +7,7 @@ Install depedencies
 composer install
 ```
 
-Install depedencies
+Run migration and seeder
 ```sh
 php artisan migrate --seed
 ```
