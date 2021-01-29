@@ -39,13 +39,15 @@ $router->group([
         $router->get('me', 				'AuthController@me');
         $router->get('refresh_token', 	'AuthController@refresh');
 
-        // Kirim dan Edit Pesan
-        $router->post('message/send',   'MessageController@send');
-        $router->post('message/edit',   'MessageController@edit');
-        $router->post('message/delete', 'MessageController@delete');
+        // Kirim, Balas, Ubah dan Hapus Pesan
+        $router->post('message/send',       'MessageController@send');
+        $router->put('message/edit',        'MessageController@edit');
+        $router->delete('message/delete',   'MessageController@delete');
+        $router->post('message/reply',      'MessageController@reply');
         
+        // List percakapan dan detail percakapan
         $router->get('conversation/list',           'ConversationController@list');
-        $router->get('conversation/{chat_room_id}', 'ConversationController@detail');
+        $router->get('conversation/detail/{chat_room_id}', 'ConversationController@detail');
     });
 });
 

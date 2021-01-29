@@ -41,9 +41,14 @@ class MessageController extends ApiController
             $this->response->success = false;
             $this->response->message = 'Alamat Email Penerima Tidak Ditemukan!';
         } else {
-            $chat_room = ChatRoom::firstOrCreate(
-                ['name' => $sender->email.' - '.$receiver->email]
-            );
+            $chat_room = ChatRoom::where('name',$sender->email.' - '.$receiver->email)
+                ->orWhere('name',$receiver->email.' - '.$sender->email)
+                ->first();
+            if(!$chat_room){
+                $chat_room = ChatRoom::firstOrCreate([
+                    'name' => $sender->email.' - '.$receiver->email
+                ]);
+            }
 
             $chat_room_users1 = ChatRoomUser::firstOrCreate(
                 [
