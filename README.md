@@ -7,12 +7,22 @@ Install depedencies
 composer install
 ```
 
+Install depedencies
+```sh
+php artisan migrate --seed
+```
+
 Run project
 ```sh
 php -S localhost:8000 -t public
 ```
 
 Setelah selesai, sistem akan berjalan pada url http://localhost:8000.
+
+## User From Seeder
+* email : madmor@gmail.com, password : password
+* email : bone@gmail.com, password : password
+
 
 ## 🚀 Tools
 * PHP 7.4
