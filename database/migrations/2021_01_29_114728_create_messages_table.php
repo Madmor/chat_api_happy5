@@ -25,7 +25,9 @@ class CreateMessagesTable extends Migration
             $table->foreign('sender_id')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');
 
-            $table->tinyInteger('status')->default(0);
+            $table->timestamp('read_at')->nullable();
+            $table->boolean('is_reply')->default(false);
+
             $table->timestamps();
         });
     }

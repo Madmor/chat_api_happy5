@@ -6,6 +6,7 @@ use App\Http\Controllers\API\v1\ApiController;
 use App\Models\ChatRoom;
 use App\Models\Message;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -15,7 +16,6 @@ class ConversationController extends ApiController
     public function list(Request $request)
     {
         $list = ChatRoom::join('chat_room_users','chat_room_users.chat_room_id','=','chat_rooms.id')
-            ->join('messages','messages.chat_room_id','=','chat_rooms.id')
             ->where('chat_room_users.user_id',user()->id)
             ->select(
                 'chat_rooms.*'
@@ -25,7 +25,7 @@ class ConversationController extends ApiController
 
         foreach ($list as $key => $item) {
             $item->unread_count = Message::where('chat_room_id',$item->id)
-                ->where('status',Message::STATUS_UNREAD)
+                ->whereNull('read_at')
                 ->where('sender_id','<>',user()->id)
                 ->count();
             
@@ -45,14 +45,20 @@ class ConversationController extends ApiController
 
     public function detail(Request $request, $chat_room_id)
     {
+        $now = Carbon::now();
         Message::where('chat_room_id',$chat_room_id)
             ->where('sender_id','<>',user()->id)
+            ->whereNull('read_at')
             ->update([
-                'status' => Message::STATUS_READ
+                'read_at' => $now
             ]);
             
         $all_message = Message::where('chat_room_id',$chat_room_id)
             ->orderBy('created_at','desc')
+            ->with([
+                'message_reply:message_id,reply_id',
+                'message_reply.message:id,message'
+            ])
             ->get();
         
         $this->response->data = [

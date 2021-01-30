@@ -154,7 +154,7 @@ class AuthController extends ApiController
         auth('api')->logout();
 
         $this->response = [
-            'status' => true,
+            'success' => true,
             'message' => 'Berhasil Logout',
         ];
 

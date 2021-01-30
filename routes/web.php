@@ -2,6 +2,7 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 /*
@@ -36,6 +37,7 @@ $router->group([
     $router->group([
         'middleware' => 'auth.api'
     ], function () use ($router) {
+        $router->post('logout',         'AuthController@logout');
         $router->get('me', 				'AuthController@me');
         $router->get('refresh_token', 	'AuthController@refresh');
 
@@ -52,7 +54,3 @@ $router->group([
 });
 
 $router->get('user',       'API\v1\UserController@list');
-// $router->get('user', function(){
-//     $user = \App\Models\User::all();
-//     return response()->json($user);
-// });

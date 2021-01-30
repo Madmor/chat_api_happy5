@@ -18,7 +18,6 @@ class Users extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->text('api_token')->nullable();
             $table->text('jwt_token')->nullable();
             $table->timestamps();
         });
