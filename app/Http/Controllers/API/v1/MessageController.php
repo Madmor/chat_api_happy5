@@ -95,11 +95,19 @@ class MessageController extends ApiController
             return $this->response_api();
         }
 
-        $message    = Message::find($request->message_id);
+        $message        = Message::find($request->message_id);
+        $chat_room_user = ChatRoomUser::where('user_id',user()->id)
+            ->where('chat_room_id',$message->chat_room_id)
+            ->first();
         if(!$message){
             $this->code = 404;
             $this->response->success = false;
             $this->response->message = 'Pesan tidak ditemukan!';
+            return $this->response_api();
+        } else if(!$chat_room_user){
+            $this->code = 401;
+            $this->response->success = false;
+            $this->response->message = 'Tidak dapat membalas pesan yang bukan bagian dari percakapan anda!';
             return $this->response_api();
         }
         DB::beginTransaction();
