@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\API\v1\ApiController;
 use App\Models\ChatRoom;
+use App\Models\ChatRoomUser;
 use App\Models\Message;
 use App\Models\User;
 use Carbon\Carbon;
@@ -45,6 +46,15 @@ class ConversationController extends ApiController
 
     public function detail(Request $request, $chat_room_id)
     {
+        $chat_room_user = ChatRoomUser::where('user_id',user()->id)
+            ->where('chat_room_id',$chat_room_id)
+            ->first();
+        if(!$chat_room_user){
+            $this->code = 401;
+            $this->response->success = false;
+            $this->response->message = 'Tidak dapat membuka percakapan yang bukan milik anda!';
+            return $this->response_api();
+        }   
         $now = Carbon::now();
         Message::where('chat_room_id',$chat_room_id)
             ->where('sender_id','<>',user()->id)
