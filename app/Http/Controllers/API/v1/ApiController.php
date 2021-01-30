@@ -29,4 +29,19 @@ class ApiController extends Controller
     {
         return response()->json($this->response,$this->code);
     }
+
+    /**
+     *
+     * $validator instance of Illuminate\Support\Facades\Validator
+     */
+    public function error_response($validator)
+    {
+        $errors = err_validator($validator->errors()->getMessages());
+
+        $this->code = 422;
+        $this->response->success = false;
+        $this->response->error = $errors;
+        $this->response->message = __('validation.failed');
+        return $this->response_api();
+    }
 }

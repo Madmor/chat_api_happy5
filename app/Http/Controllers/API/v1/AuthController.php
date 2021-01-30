@@ -23,13 +23,7 @@ class AuthController extends ApiController
         );
 
         if ($validator->fails()) {
-            $errors = err_validator($validator->errors()->getMessages());
-
-            $this->code = 422;
-            $this->response->status = false;
-            $this->response->error = $errors;
-            $this->response->message = __('validation.failed');
-            return $this->response_api();
+            return $this->error_response($validator);
         }
 
         $user = User::where('email',$request->email)->first();
@@ -74,13 +68,7 @@ class AuthController extends ApiController
         );
 
         if ($validator->fails()) {
-            $errors = err_validator($validator->errors()->getMessages());
-
-            $this->code = 422;
-            $this->response->status = false;
-            $this->response->error = $errors;
-            $this->response->message = __('validation.failed');
-            return $this->response_api();
+            return $this->error_response($validator);
         }
 
         DB::beginTransaction();

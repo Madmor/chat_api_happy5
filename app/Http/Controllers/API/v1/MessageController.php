@@ -25,13 +25,7 @@ class MessageController extends ApiController
         );
 
         if ($validator->fails()) {
-            $errors = err_validator($validator->errors()->getMessages());
-
-            $this->code = 422;
-            $this->response->success = false;
-            $this->response->error = $errors;
-            $this->response->message = __('validation.failed');
-            return $this->response_api();
+            return $this->error_response($validator);
         }
         DB::beginTransaction();
         $sender = user();
@@ -86,13 +80,7 @@ class MessageController extends ApiController
         );
 
         if ($validator->fails()) {
-            $errors = err_validator($validator->errors()->getMessages());
-
-            $this->code = 422;
-            $this->response->success = false;
-            $this->response->error = $errors;
-            $this->response->message = __('validation.failed');
-            return $this->response_api();
+            return $this->error_response($validator);
         }
 
         $message        = Message::find($request->message_id);
@@ -140,13 +128,7 @@ class MessageController extends ApiController
         );
 
         if ($validator->fails()) {
-            $errors = err_validator($validator->errors()->getMessages());
-
-            $this->code = 422;
-            $this->response->success = false;
-            $this->response->error = $errors;
-            $this->response->message = __('validation.failed');
-            return $this->response_api();
+            return $this->error_response($validator);
         }
 
         // Validasi pesan
@@ -194,13 +176,7 @@ class MessageController extends ApiController
         );
 
         if ($validator->fails()) {
-            $errors = err_validator($validator->errors()->getMessages());
-
-            $this->code = 422;
-            $this->response->success = false;
-            $this->response->error = $errors;
-            $this->response->message = __('validation.failed');
-            return $this->response_api();
+            return $this->error_response($validator);
         }
 
         $message    = Message::find($request->message_id);
@@ -214,7 +190,7 @@ class MessageController extends ApiController
             $this->response->success = false;
             $this->response->message = 'Tidak dapat menghapus pesan milik orang lain!';
             return $this->response_api();
-        } else if($message->status != null){
+        } else if($message->read_at != null){
             $this->code = 401;
             $this->response->success = false;
             $this->response->message = 'Tidak dapat menghapus pesan yang sudah dibaca!';
